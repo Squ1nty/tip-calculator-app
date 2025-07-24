@@ -1,0 +1,9 @@
+.presetTipBtn.selectedBtn{
+    color: red;
+}
+#customTipBtn.inactive{
+    display: none;
+}
+#customTipInput.active{
+    display: block;
+}
