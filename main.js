@@ -15,7 +15,8 @@ let calculatorForm = document.getElementById("calculatorForm");
 let billInput = document.getElementById("billInput");
 let billInputErrorLabel = document.getElementById("billInputErrorLabel");
 
-let presetTipBtn = document.querySelectorAll(".presetTipBtn")
+let presetTipBtn = document.querySelectorAll(".presetTipBtn");
+let tipBtn;
 let customTipBtn = document.getElementById("customTipBtn");
 let customTipInput = document.getElementById("customTipInput");
 
@@ -96,7 +97,7 @@ presetTipBtn.forEach(selectedBtn => {
         }
         
         let tipBtnId = e.target.getAttribute("id");
-        let tipBtn = document.getElementById(tipBtnId);
+        tipBtn = document.getElementById(tipBtnId);
         tipBtn.classList.add("selectedBtn");
     });
 });
