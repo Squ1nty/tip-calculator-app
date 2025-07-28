@@ -14,18 +14,27 @@ let calculatorForm = document.getElementById("calculatorForm");
 
 let billInput = document.getElementById("billInput");
 let billInputErrorLabel = document.getElementById("billInputErrorLabel");
+let billValue = 0;
+let isBillValid = false;
 
 let presetTipBtn = document.querySelectorAll(".presetTipBtn");
 let tipBtn;
+let tipValue;
+let isTipValid = false;
 let customTipBtn = document.getElementById("customTipBtn");
 let customTipInput = document.getElementById("customTipInput");
 
 let headCountInput = document.getElementById("headCountInput");
 let headCountErrorLabel = document.getElementById("headCountErrorLabel");
+let headCount = 0;
+let isHeadCountValid = false;
 
 let resetBtn = document.getElementById("resetBtn");
 
 function checkBillValidity(){
+    billInputErrorLabel.textContent = "";
+    calculatorForm.classList.remove("error-state");
+
     if(billInput.value == ""){
         billInputErrorLabel.textContent = "Required";
         calculatorForm.classList.add("error-state");
@@ -43,7 +52,28 @@ function checkBillValidity(){
     }
     return true;
 }
+function checkTipValue(){
+    if(customTipInput.value == ""){
+        customTipInputErrorLabel.textContent = "Required";
+        calculatorForm.classList.add("error-state");
+        return false;
+    }
+    if(customTipInput.value >= 1){
+        customTipInputErrorLabel.textContent = "Invalid Tip Value";
+        calculatorForm.classList.add("error-state");
+        return false;
+    }
+    if(customTipInput.value % 1 != 0){
+        customTipInputErrorLabel.textContent = "Must be a whole number";
+        calculatorForm.classList.add("error-state");
+        return false;
+    }
+    return true;
+}
 function checkHeadCount(){
+    headCountErrorLabel.textContent = "";
+    calculatorForm.classList.remove("error-state");
+
     if(headCountInput.value == ""){
         headCountErrorLabel.textContent = "Required";
         calculatorForm.classList.add("error-state");
@@ -62,23 +92,32 @@ function checkHeadCount(){
     return true;
 }
 
-calculatorForm.addEventListener("reset", (e) => {
-    e.preventDefault();
-
-    let billValue = 0;
-    let headCount = 0;
-    
-    let isBillValid = checkBillValidity();
-    let isHeadCountValid = checkHeadCount();
-
-    if(isBillValid && isHeadCountValid){
-        billValue = billInput.value;
-        headCount = headCountInput.value;
+function resetBtnState(){
+    if(isBillValid && isTipValid && isHeadCountValid){
+        calculateCost();
+        resetBtn.classList.add("active");
     }
-    else{
-        return;
+}
+
+calculatorForm.addEventListener("change", (e) => {
+    let currentInputId = e.target.getAttribute("id");
+
+    if(currentInputId == "billInput"){
+        isBillValid = checkBillValidity();
+        if(isBillValid){
+            billValue = e.target.value;
+        }
     }
+    else if(currentInputId == "headCountInput"){
+        isHeadCountValid = checkHeadCount();
+        if(isHeadCountValid){
+            headCount = e.target.value;
+        }
+    }
+
+    resetBtnState();
 });
+
 presetTipBtn.forEach(selectedBtn => {
     selectedBtn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -93,11 +132,17 @@ presetTipBtn.forEach(selectedBtn => {
         if(selectedBtn.getAttribute("id") == "customTipBtn"){
             customTipBtn.classList.add("inactive");
             customTipInput.classList.add("active");
+            if(checkTipValue()){
+                isTipValid = true
+                tipValue = customTipInput.value;
+                resetBtnState();
+            }
             return;
         }
         
         let tipBtnId = e.target.getAttribute("id");
         tipBtn = document.getElementById(tipBtnId);
         tipBtn.classList.add("selectedBtn");
+        tipValue = tipBtn.value;
     });
 });

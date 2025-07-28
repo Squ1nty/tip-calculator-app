@@ -7,3 +7,11 @@
 #customTipInput.active{
     display: block;
 }
+
+#resetBtn{
+    background-color: transparent;
+    border: none;
+}
+#resetBtn.active{
+    background-color: green;
+}
