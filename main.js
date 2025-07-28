@@ -92,6 +92,12 @@ function checkHeadCount(){
     return true;
 }
 
+function removeTipBtnActiveState(){
+    document.querySelectorAll(".selectedBtn").forEach((e) => {
+        e.classList.remove("selectedBtn");
+    });
+}
+
 function resetBtnState(){
     if(isBillValid && isTipValid && isHeadCountValid){
         calculateCost();
@@ -101,6 +107,15 @@ function resetBtnState(){
 
 calculatorForm.addEventListener("change", (e) => {
     let currentInputId = e.target.getAttribute("id");
+
+    if(currentInputId == "customTipInput"){
+        removeTipBtnActiveState();
+        isTipValid = checkTipValue();
+        if(isTipValid){
+            tipValue = (e.target.value) / 100.00;
+            console.log(tipValue);
+        }
+    }
 
     if(currentInputId == "billInput"){
         isBillValid = checkBillValidity();
@@ -125,9 +140,7 @@ presetTipBtn.forEach(selectedBtn => {
         customTipBtn.classList.remove("inactive");
         customTipInput.classList.remove("active");
 
-        document.querySelectorAll(".selectedBtn").forEach((e) => {
-            e.classList.remove("selectedBtn");
-        });
+        removeTipBtnActiveState();
 
         if(selectedBtn.getAttribute("id") == "customTipBtn"){
             customTipBtn.classList.add("inactive");
