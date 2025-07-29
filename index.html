@@ -37,7 +37,7 @@
           <button class="presetTipBtn" id="fifteenBtn" value="0.15">15%</button>
           <button class="presetTipBtn" id="twentyFiveBtn" value="0.25">25%</button>
           <button class="presetTipBtn" id="fiftyBtn" value="0.5">50%</button>
-          <button class="presetTipBtn" id="customTipBtn">Custom</button>
+          <button id="customTipBtn">Custom</button>
           <label class="textInputErrorLabel" id="customTipInputErrorLabel" for="customTipInput"></label>
           <input class="textInput" id="customTipInput" type="number"> 
         </div>
@@ -55,14 +55,14 @@
                 <p class="amountForText" id="tipAmountText">Tip Amount</p>
                 <p class="perPersonText">/ person</p>
             </div>
-            <p>$0.00</p>
+            <p id="tipPerPersonDisplay">$0.00</p>
           </div>
           <div id="totalDisplayContainer">
             <div id="totalDiplayTextContainer">
                 <p class="amountForText" id="totalAmountText">Total</p>
                 <p class="perPersonText">/ person</p>
             </div>
-            <p>$0.00</p>
+            <p id="totalPerPersonDisplay">$0.00</p>
           </div>
         </div>
         <button id="resetBtn" type="reset">RESET</button>

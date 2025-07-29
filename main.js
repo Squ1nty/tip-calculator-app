@@ -29,6 +29,9 @@ let headCountErrorLabel = document.getElementById("headCountErrorLabel");
 let headCount = 0;
 let isHeadCountValid = false;
 
+let tipPerPersonDisplay = document.getElementById("tipPerPersonDisplay");
+let totalPerPersonDisplay = document.getElementById("totalPerPersonDisplay");
+
 let resetBtn = document.getElementById("resetBtn");
 
 function checkBillValidity(){
@@ -58,7 +61,7 @@ function checkTipValue(){
         calculatorForm.classList.add("error-state");
         return false;
     }
-    if(customTipInput.value >= 1){
+    if(customTipInput.value < 1){
         customTipInputErrorLabel.textContent = "Invalid Tip Value";
         calculatorForm.classList.add("error-state");
         return false;
@@ -98,22 +101,45 @@ function removeTipBtnActiveState(){
     });
 }
 
-function resetBtnState(){
+function calculateCost(){
+    let tipPerPerson = (billValue * tipValue) / headCount;
+    let tipDisplay = tipPerPerson.toFixed(2);
+    let totalPerPerson = (billValue / headCount) + tipPerPerson;
+    let totalDisplay = totalPerPerson.toFixed(2);
+
+    tipPerPersonDisplay.textContent = `$${tipDisplay}`;
+    totalPerPersonDisplay.textContent = `$${totalDisplay}`;
+}
+
+function stateOfResetBtn(){
     if(isBillValid && isTipValid && isHeadCountValid){
         calculateCost();
         resetBtn.classList.add("active");
     }
+    else{
+        resetBtn.classList.remove("active");
+    }
 }
+
+customTipBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    removeTipBtnActiveState();
+    customTipBtn.classList.add("inactive");
+    customTipInput.classList.add("active");
+});
 
 calculatorForm.addEventListener("change", (e) => {
     let currentInputId = e.target.getAttribute("id");
 
+    billInputErrorLabel.textContent = "";
+    customTipInputErrorLabel.textContent = "";
+    headCountErrorLabel.textContent = "";
+
     if(currentInputId == "customTipInput"){
-        removeTipBtnActiveState();
         isTipValid = checkTipValue();
         if(isTipValid){
             tipValue = (e.target.value) / 100.00;
-            console.log(tipValue);
         }
     }
 
@@ -130,7 +156,7 @@ calculatorForm.addEventListener("change", (e) => {
         }
     }
 
-    resetBtnState();
+    stateOfResetBtn();
 });
 
 presetTipBtn.forEach(selectedBtn => {
@@ -139,23 +165,22 @@ presetTipBtn.forEach(selectedBtn => {
 
         customTipBtn.classList.remove("inactive");
         customTipInput.classList.remove("active");
-
         removeTipBtnActiveState();
-
-        if(selectedBtn.getAttribute("id") == "customTipBtn"){
-            customTipBtn.classList.add("inactive");
-            customTipInput.classList.add("active");
-            if(checkTipValue()){
-                isTipValid = true
-                tipValue = customTipInput.value;
-                resetBtnState();
-            }
-            return;
-        }
         
         let tipBtnId = e.target.getAttribute("id");
         tipBtn = document.getElementById(tipBtnId);
         tipBtn.classList.add("selectedBtn");
         tipValue = tipBtn.value;
+        isTipValid = true;
+
+        stateOfResetBtn();
     });
+});
+
+calculatorForm.addEventListener("reset", (e) =>{
+    removeTipBtnActiveState();
+    calculatorForm.classList.remove("error-state");
+
+    tipPerPersonDisplay.textContent = "$0.00";
+    totalPerPersonDisplay.textContent = "$0.00";
 });
