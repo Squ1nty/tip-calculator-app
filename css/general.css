@@ -4,6 +4,8 @@
 
     font-family: "Space Mono", monospace;
     font-size: 24px;
+
+    box-sizing: border-box;
 }
 
 :root{
@@ -12,6 +14,13 @@
     --green-900: hsl(183, 100%, 15%);
     --grey-500: hsl(186, 14%, 43%);
     --grey-400: hsl(184, 14%, 56%);
-    --grey-200: hsl(189, 47%, 97%);
+    --grey-200: hsl(185, 41%, 84%);
+    --grey-50: hsl(189, 47%, 97%);
     --white: hsl(0, 100%, 100%);
+
+    --error-state-red: hsl(0, 100%, 71%);
+}
+
+button{
+    border: none;
 }
