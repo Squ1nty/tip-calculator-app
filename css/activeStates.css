@@ -1,5 +1,6 @@
 .presetTipBtn.selectedBtn{
-    color: red;
+    color: var(--green-900);
+    background-color: var(--green-400);
 }
 #customTipBtn.inactive{
     display: none;
@@ -13,5 +14,9 @@
     border: none;
 }
 #resetBtn.active{
-    background-color: green;
+    filter: none;
+}
+
+.textInput.error-state{
+    border-color: var(--error-state-red);
 }
