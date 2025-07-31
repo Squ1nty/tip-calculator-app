@@ -35,22 +35,19 @@ let totalPerPersonDisplay = document.getElementById("totalPerPersonDisplay");
 let resetBtn = document.getElementById("resetBtn");
 
 function checkBillValidity(){
-    billInputErrorLabel.textContent = "";
-    calculatorForm.classList.remove("error-state");
-
     if(billInput.value == ""){
         billInputErrorLabel.textContent = "Required";
-        calculatorForm.classList.add("error-state");
+        billInput.classList.add("error-state");
         return false;
     }
     if(billInput.value < 0){
         billInputErrorLabel.textContent = "Invalid value";
-        calculatorForm.classList.add("error-state");
+        billInput.classList.add("error-state");
         return false;
     }
     if(billInput.value == 0){
         billInputErrorLabel.textContent = "It was free...";
-        calculatorForm.classList.add("error-state");
+        billInput.classList.add("error-state");
         return false;
     }
     return true;
@@ -58,38 +55,35 @@ function checkBillValidity(){
 function checkTipValue(){
     if(customTipInput.value == ""){
         customTipInputErrorLabel.textContent = "Required";
-        calculatorForm.classList.add("error-state");
+        customTipInput.classList.add("error-state");
         return false;
     }
     if(customTipInput.value < 1){
         customTipInputErrorLabel.textContent = "Invalid Tip Value";
-        calculatorForm.classList.add("error-state");
+        customTipInput.classList.add("error-state");
         return false;
     }
     if(customTipInput.value % 1 != 0){
         customTipInputErrorLabel.textContent = "Must be a whole number";
-        calculatorForm.classList.add("error-state");
+        customTipInput.classList.add("error-state");
         return false;
     }
     return true;
 }
 function checkHeadCount(){
-    headCountErrorLabel.textContent = "";
-    calculatorForm.classList.remove("error-state");
-
     if(headCountInput.value == ""){
         headCountErrorLabel.textContent = "Required";
-        calculatorForm.classList.add("error-state");
+        headCountInput.classList.add("error-state");
         return false;
     }
     if(headCountInput.value == 0){
         headCountErrorLabel.textContent = "Can't be zero";
-        calculatorForm.classList.add("error-state");
+        headCountInput.classList.add("error-state");
         return false;
     }
     if(headCountInput.value < 0){
         headCountErrorLabel.textContent = "Invalid Value";
-        calculatorForm.classList.add("error-state");
+        headCountInput.classList.add("error-state");
         return false;
     }
     return true;
@@ -99,6 +93,10 @@ function removeTipBtnActiveState(){
     document.querySelectorAll(".selectedBtn").forEach((e) => {
         e.classList.remove("selectedBtn");
     });
+
+    //Also remove "error-state" from potential custom tip
+    customTipInputErrorLabel.textContent = "";
+    customTipInput.classList.remove("error-state");
 }
 
 function calculateCost(){
@@ -116,6 +114,10 @@ function stateOfResetBtn(){
         calculateCost();
         resetBtn.classList.add("active");
     }
+    else if(isBillValid || isTipValid || isHeadCountValid){
+        resetBtn.classList.remove("active");
+        return;
+    }
     else{
         resetBtn.classList.remove("active");
     }
@@ -131,28 +133,38 @@ customTipBtn.addEventListener("click", (e) => {
 
 calculatorForm.addEventListener("change", (e) => {
     let currentInputId = e.target.getAttribute("id");
-
-    billInputErrorLabel.textContent = "";
-    customTipInputErrorLabel.textContent = "";
-    headCountErrorLabel.textContent = "";
-
     if(currentInputId == "customTipInput"){
         isTipValid = checkTipValue();
         if(isTipValid){
+            customTipInput.classList.remove("error-state");
+            customTipInputErrorLabel.textContent = "";
             tipValue = (e.target.value) / 100.00;
+        }
+        else{
+            isTipValid = false;
         }
     }
 
     if(currentInputId == "billInput"){
         isBillValid = checkBillValidity();
         if(isBillValid){
+            billInputErrorLabel.textContent = "";
+            billInput.classList.remove("error-state");
             billValue = e.target.value;
+        }
+        else{
+            isBillValid = false;
         }
     }
     else if(currentInputId == "headCountInput"){
         isHeadCountValid = checkHeadCount();
         if(isHeadCountValid){
+            headCountErrorLabel.textContent = "";
+            headCountInput.classList.remove("error-state");
             headCount = e.target.value;
+        }
+        else{
+            isHeadCountValid = false;
         }
     }
 
@@ -178,9 +190,24 @@ presetTipBtn.forEach(selectedBtn => {
 });
 
 calculatorForm.addEventListener("reset", (e) =>{
-    removeTipBtnActiveState();
-    calculatorForm.classList.remove("error-state");
+    if(resetBtn.classList.contains("active")){
+        removeTipBtnActiveState();
+        calculatorForm.classList.remove("error-state");
 
-    tipPerPersonDisplay.textContent = "$0.00";
-    totalPerPersonDisplay.textContent = "$0.00";
+        tipPerPersonDisplay.textContent = "$0.00";
+        totalPerPersonDisplay.textContent = "$0.00";
+
+        billValue = 0;
+        tipValue = 0;
+        headCount = 0;
+
+        isBillValid = false;
+        isTipValid = false;
+        isHeadCountValid = false;
+
+        stateOfResetBtn();
+    }
+    else{
+        return;
+    }
 });
