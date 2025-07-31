@@ -205,6 +205,9 @@ calculatorForm.addEventListener("reset", (e) =>{
         isTipValid = false;
         isHeadCountValid = false;
 
+        customTipBtn.classList.remove("inactive");
+        customTipInput.classList.remove("active");
+
         stateOfResetBtn();
     }
     else{
