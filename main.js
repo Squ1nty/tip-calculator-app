@@ -190,6 +190,8 @@ presetTipBtn.forEach(selectedBtn => {
 });
 
 calculatorForm.addEventListener("reset", (e) =>{
+    e.preventDefault();
+
     if(resetBtn.classList.contains("active")){
         removeTipBtnActiveState();
         calculatorForm.classList.remove("error-state");
